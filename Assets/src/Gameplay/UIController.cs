@@ -29,6 +29,7 @@ public class UIController : MonoBehaviour
 
     [Header("Menu Screen UI")]
     public TMP_Text highScoreText;
+    public TMP_Text soundTxt;
     // public List<Image> soundSprites;
 
     [Header("Gameplay UI")]
@@ -129,10 +130,9 @@ public class UIController : MonoBehaviour
         GameManager.Instance.ChangeState(GameManager.GameState.Menu);
     }
 
-    // public void ToggleSound()
-    // {
-    //     bool isSoundOn = SoundManager.Instance.ToggleSound();
-    //     soundSprites[0].gameObject.SetActive(!isSoundOn);
-    //     soundSprites[1].gameObject.SetActive(isSoundOn);
-    // } 
+    public void ToggleSound()
+    {
+        bool isSoundOn = SoundManager.Instance.ToggleSound();
+        soundTxt.text = !isSoundOn ? "SOUND OFF" : "SOUND ON";
+    } 
 }
