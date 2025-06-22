@@ -1,31 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GamePlayController : MonoBehaviour
 {
-    private int lifeCount = 3;
+    [SerializeField] private UIController _uiController;
     
-    
-    // Start is called before the first frame update
-    void Start()
+
+    [SerializeField] private GameObject _gameplayArea;
+    [SerializeField] private PlayerController _playerController;
+
+    [SerializeField] private List<ItemSpawner> _spawners;
+
+    private void Awake()
     {
-        
+        _gameplayArea.SetActive(false);
+        _playerController.EndGame();
+        _playerController.gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartGame()
     {
-        
+        GameData.CurrentLives = 3;
+        _gameplayArea.SetActive(true);
+        _playerController.gameObject.SetActive(true);
+        _playerController.StartGame();
     }
 
-    public void OnCollectedItem()
+    public void EndGame()
     {
-        
+        _gameplayArea.SetActive(false);
+        _playerController.EndGame();
+        _playerController.gameObject.SetActive(false);
+        GameManager.Instance.ChangeState(GameManager.GameState.Result);
     }
 
-    public void OnCollectedObstacle()
+    public void OnCollectedItem(Transform player)
     {
-        
+        _uiController.PlayWinEffect(player);
+        GameData.CurrentScore++;
+        GameManager.Instance.UpdateLifeAndScore();
+    }
+
+    public void OnCollectedObstacle(Transform player)
+    {
+        _uiController.PlayFailEffect(player);
+        GameData.CurrentLives--;
+        if (GameData.CurrentLives == 0)
+        {
+            EndGame();
+        }
+        GameManager.Instance.UpdateLifeAndScore();
     }
 }

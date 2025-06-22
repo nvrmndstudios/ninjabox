@@ -44,6 +44,17 @@ public class PlayerController : MonoBehaviour
         _currentScore = 0;
         UpdateScoreToUI();
     }
+
+    public void StartGame()
+    {
+        _isPlaying = true;
+    }
+
+    public void EndGame()
+    {
+        _isPlaying = false;
+    }
+
     // Update is called once per frame
     void Update(){
         if (_isPlaying)
@@ -59,7 +70,6 @@ public class PlayerController : MonoBehaviour
             _isLeftSide = !_isLeftSide;
             _targetPosition = _isLeftSide? _leftPos: _rightPost;
         }
-        
     }
     private void HandlePlayerPos () {
         float distance = Vector3.Distance(transform.position, _targetPosition);
@@ -83,18 +93,20 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(!_isPlaying) return;
+        
         if (other.TryGetComponent(out Item item))
         {
             var isWin = item.GetItemType() == Item.ItemType.Collectable;
             if (isWin)
             {
                 UpdateScore();
-                _gameplayController.OnCollectedItem();
+                _gameplayController.OnCollectedItem(transform);
                
             }
             else
             {
-                _gameplayController.OnCollectedObstacle();
+                _gameplayController.OnCollectedObstacle(transform);
             }
             var effect = Instantiate(isWin? _winEffect : _loseEffect);
             effect.transform.position = this.transform.position;
