@@ -10,8 +10,8 @@ public class GamePlayController : MonoBehaviour
 
     [SerializeField] private GameObject _gameplayArea;
     [SerializeField] private PlayerController _playerController;
-
-    [SerializeField] private List<ItemSpawner> _spawners;
+    [SerializeField] private SpawnerDifficultyController _difficultyController;
+    
 
     private void Awake()
     {
@@ -23,6 +23,7 @@ public class GamePlayController : MonoBehaviour
     public void StartGame()
     {
         GameData.CurrentLives = 3;
+        _difficultyController.OnScoreChanged(GameData.CurrentScore);
         _gameplayArea.SetActive(true);
         _playerController.gameObject.SetActive(true);
         _playerController.StartGame();
@@ -39,7 +40,9 @@ public class GamePlayController : MonoBehaviour
     public void OnCollectedItem(Transform player)
     {
         _uiController.PlayWinEffect(player);
+        
         GameData.CurrentScore++;
+        _difficultyController.OnScoreChanged(GameData.CurrentScore);
         GameManager.Instance.UpdateLifeAndScore();
     }
 
