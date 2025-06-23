@@ -66,9 +66,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInput (){
 
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetMouseButtonDown(0))
+        {
             _isLeftSide = !_isLeftSide;
-            _targetPosition = _isLeftSide? _leftPos: _rightPost;
+            _targetPosition = _isLeftSide ? _leftPos : _rightPost;
         }
     }
     private void HandlePlayerPos () {
