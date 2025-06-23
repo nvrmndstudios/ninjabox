@@ -8,15 +8,20 @@ public class UIController : MonoBehaviour
 {
    [SerializeField] private Canvas canvas;
    [SerializeField] private List<GameObject> _winFailPrefabs;
+
+
+   private List<GameObject> _generatedClones = new List<GameObject>();
    public void PlayWinEffect(Transform player)
    {
       GameObject instance = Instantiate(_winFailPrefabs[0]);
+      _generatedClones.Add(instance);
       instance.GetComponent<FloatingTextEffect>().Initialize(player.position, canvas);
    }
 
    public void PlayFailEffect(Transform player)
    {
       GameObject instance = Instantiate(_winFailPrefabs[1]);
+      _generatedClones.Add(instance);
       instance.GetComponent<FloatingTextEffect>().Initialize(player.position, canvas);
    }
    
@@ -74,6 +79,19 @@ public class UIController : MonoBehaviour
 
     public void ShowOnlyResult()
     {
+        if (_generatedClones != null && _generatedClones.Count > 0)
+        {
+            foreach (var t in _generatedClones)
+            {
+                if (t != null)
+                {
+                    Destroy(t);
+                }
+            }
+        }
+
+        _generatedClones = new List<GameObject>();
+
         splashScreen.SetActive(false);
         menuScreen.SetActive(false);
         gameplayScreen.SetActive(false);
